@@ -1,0 +1,8 @@
+# ninja log v5
+0	47	1643736809060022628	CMakeFiles/Rational_pointer.dir/rational_pointer.c.o	2180410341b50c6c
+0	47	1643736809060022628	CMakeFiles/Rational_pointer.dir/main.c.o	6ad380457ce3a01b
+0	19	1643737180586670881	build.ninja	f54db6ffbba8cf76
+47	86	1643736809100022627	Rational_pointer	d60f62beef8a6159
+0	27	1643737188950003795	CMakeFiles/Rational_pointer.dir/main.c.o	7267cb0f752ffa89
+0	30	1643737188953337129	CMakeFiles/Rational_pointer.dir/rational_pointer.c.o	be516287ce45df8d
+30	55	1643737188976670461	Rational_pointer	d60f62beef8a6159
