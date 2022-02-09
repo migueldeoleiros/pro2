@@ -1,4 +1,0 @@
-/home/miguel/universidad/pro22/code/p0/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/miguel/universidad/pro22/code/p0/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/miguel/universidad/pro22/code/p0/cmake-build-debug/CMakeFiles/Rational_pointer.dir
-/home/miguel/universidad/pro22/code/p0/cmake-build-debug/CMakeFiles/Rational_struct.dir
