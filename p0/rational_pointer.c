@@ -27,7 +27,7 @@ int numerator(Rational r){
 
 //Operation that returns the denominator of a rational number
 int denominator(Rational r){
-    return r->num;
+    return r->den;
 }
 
 //Operation that returns de sum of two rationals
