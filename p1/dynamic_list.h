@@ -38,12 +38,12 @@ void createEmptyList (tList*);
  */
 bool isEmptyList(tList);
 
-/*Devuelve la posición del último elemento de la lista
+/*Devuelve la posición del primer elemento de la lista
  *Precondición: La lista no está vacía
  */
 tPosL first(tList);
 
-/*Devuelve la posición del primer elemento de la lista
+/*Devuelve la posición del último elemento de la lista
  *Precondición: La lista no está vacía
  */
 tPosL last(tList);
