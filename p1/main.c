@@ -21,11 +21,12 @@
 #include "static_list.h"
 #endif
 
+
 void new(char *param1, char *param2, char *param3, char *param4, tList *list) {
     
 }
 
-void stats(tList *list) {
+void stats(tList list) {
     
 }
 
@@ -38,7 +39,7 @@ void delete(char *param1, tList *list) {
 }
 
 void processCommand(char *commandNumber, char command, char *param1,
-                    char *param2, char *param3, char *param4, tList list) {
+                    char *param2, char *param3, char *param4, tList *list) {
 
     printf("********************\n");
 
