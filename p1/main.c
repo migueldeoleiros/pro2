@@ -21,23 +21,53 @@
 #include "static_list.h"
 #endif
 
+void new(char *param1, char *param2, char *param3, char *param4, tList *list) {
+    
+}
 
+void stats(tList *list) {
+    
+}
 
+void bid(char *param1, char *param2, char *param3, tList *list) {
+    
+}
 
-void processCommand(char *commandNumber, char command, char *param1, char *param2, char *param3, char *param4) {
+void delete(char *param1, tList *list) {
+    
+}
+
+void processCommand(char *commandNumber, char command, char *param1,
+                    char *param2, char *param3, char *param4, tList list) {
+
+    printf("********************\n");
 
     switch (command) {
-        case 'N':
-            printf("Command: %s %c %s %s %s %s\n", commandNumber, command, param1, param2, param3, param4);
+        case 'N': {
+            printf("%s %c: product %s seller %s category %s price %s\n",
+                   commandNumber, command, param1, param2, param3, param4);
+            new(param1, param2, param3, param4, list);
             break;
-        case 'S':
+        }
+        case 'S': {
+            printf("%s %c \n", commandNumber, command);
+            stats(*list);
             break;
-        case 'B':
+        }
+        case 'B': {
+            printf("%s %c: product %s bidder %s price %s\n",
+                   commandNumber, command, param1, param2, param3);
+            bid(param1, param2, param3, list);
             break;
-        case 'D':
+        }
+        case 'D': {
+            printf("%s %c: product %s\n", commandNumber, command, param1);
+            delete(param1, list);
             break;
-        default:
+        }
+        default: {
             break;
+        }
     }
 }
 
@@ -46,6 +76,10 @@ void readTasks(char *filename) {
     char *commandNumber, *command, *param1, *param2, *param3, *param4;
     const char delimiters[] = " \n\r";
     char buffer[MAX_BUFFER];
+
+    //Crear lista
+    tList list;
+    createEmptyList(&list);
 
     f = fopen(filename, "r");
 
@@ -59,7 +93,8 @@ void readTasks(char *filename) {
             param3 = strtok(NULL, delimiters);
             param4 = strtok(NULL, delimiters);
 
-            processCommand(commandNumber, command[0], param1, param2, param3, param4);
+            processCommand(commandNumber, command[0], param1, param2,
+                           param3, param4, &list);
         }
 
         fclose(f);
