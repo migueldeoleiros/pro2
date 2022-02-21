@@ -22,7 +22,8 @@
 #endif
 
 
-void new(char *param1, char *param2, char *param3, char *param4, tList *list) {
+void new(char *productId, char *userId, char *productCategory,
+         char *productPrice, tList *list) {
     
 }
 
@@ -30,11 +31,11 @@ void stats(tList list) {
     
 }
 
-void bid(char *param1, char *param2, char *param3, tList *list) {
+void bid(char *productId, char *userId, char *productPrice, tList *list) {
     
 }
 
-void delete(char *param1, tList *list) {
+void delete(char *productId, tList *list) {
     
 }
 
