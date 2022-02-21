@@ -24,6 +24,27 @@
 
 void new(char *productId, char *userId, char *productCategory,
          char *productPrice, tList *list) {
+
+    tItemL item;
+
+    strcpy(item.seller, userId);
+
+    strcpy(item.productId, productId);
+    
+    if(strcmp(productCategory, "book") == 0)
+        item.productCategory = book;
+    else
+        item.productCategory = painting;
+        
+    item.productPrice = atoi(productPrice);
+
+    item.bidCounter = 0;
+
+    if(findItem(userId, *list) == LNULL && insertItem(item, LNULL, list)){
+        printf("New: product %s seller %s category %s price %s",
+               productId, userId, productCategory, productPrice);
+    }else 
+        printf("Error: New not possible");
     
 }
 
