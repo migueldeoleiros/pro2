@@ -57,12 +57,14 @@ char *categoryToString(tProductCategory category){
 }
 
 void stats(tList list) {
+    tPosL pos;
+    tItemL item;
+    int nBooks=0, nPaintings=0;
+    float booksPrice=0, paintingsPrice=0;
 
     if(!isEmptyList(list)){
-        tPosL pos;
-        tItemL item;
-        int nBooks=0, nPaintings=0;
-        float booksPrice=0, paintingsPrice=0;
+        nBooks=0; nPaintings=0;
+        booksPrice=0; paintingsPrice=0;
 
         for(pos = first(list); pos != LNULL; pos = next(pos, list)){
             item = getItem(pos, list);
