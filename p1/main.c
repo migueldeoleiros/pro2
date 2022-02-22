@@ -36,19 +36,42 @@ void new(char *productId, char *userId, char *productCategory,
     else
         item.productCategory = painting;
         
-    item.productPrice = atoi(productPrice);
+    item.productPrice = atof(productPrice);
 
     item.bidCounter = 0;
 
     if(findItem(userId, *list) == LNULL && insertItem(item, LNULL, list)){
-        printf("New: product %s seller %s category %s price %s",
+        printf("* New: product %s seller %s category %s price %s\n",
                productId, userId, productCategory, productPrice);
     }else 
-        printf("Error: New not possible");
+        printf("+ Error: New not possible\n");
     
 }
 
+char *categoryToString(tProductCategory category){
+
+    if(category == book)
+        return "book";
+    else
+        return "painting";
+}
+
 void stats(tList list) {
+
+    if(!isEmptyList(list)){
+        tPosL pos;
+        tItemL item;
+        for(pos = first(list); pos != LNULL; pos = next(pos, list)){
+            item = getItem(pos, list);
+
+            printf("Product %s seller %s category %s price %.2f bids %d\n",
+                   item.productId, item.seller, categoryToString(item.productCategory),
+                   item.productPrice, item.bidCounter);
+        }
+        
+    }else{
+        printf("+ Error: Stats not posible\n");
+    }
     
 }
 
