@@ -61,13 +61,30 @@ void stats(tList list) {
     if(!isEmptyList(list)){
         tPosL pos;
         tItemL item;
+        int nBooks=0, nPaintings=0;
+        float booksPrice=0, paintingsPrice=0;
+
         for(pos = first(list); pos != LNULL; pos = next(pos, list)){
             item = getItem(pos, list);
 
             printf("Product %s seller %s category %s price %.2f bids %d\n",
                    item.productId, item.seller, categoryToString(item.productCategory),
                    item.productPrice, item.bidCounter);
+
+            if(item.productCategory == book){
+                nBooks++;
+                booksPrice += item.productPrice;
+            }else{
+                nPaintings++;
+                paintingsPrice += item.productPrice;
+            }
         }
+
+        printf("Category  Products    Price  Average\n");
+        printf("Book      %8d %8.2f %8.2f\n", nBooks, booksPrice,
+               nBooks > 0 ? booksPrice/nBooks : 0);
+        printf("Painting  %8d %8.2f %8.2f\n", nPaintings, paintingsPrice,
+               nPaintings > 0 ? paintingsPrice/nPaintings : 0);
         
     }else{
         printf("+ Error: Stats not posible\n");
