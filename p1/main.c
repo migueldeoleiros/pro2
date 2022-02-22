@@ -40,7 +40,7 @@ void new(char *productId, char *userId, char *productCategory,
 
     item.bidCounter = 0;
 
-    if(findItem(userId, *list) == LNULL && insertItem(item, LNULL, list)){
+    if(findItem(productId, *list) == LNULL && insertItem(item, LNULL, list)){
         printf("* New: product %s seller %s category %s price %s\n",
                productId, userId, productCategory, productPrice);
     }else 
@@ -80,7 +80,7 @@ void stats(tList list) {
             }
         }
 
-        printf("Category  Products    Price  Average\n");
+        printf("\nCategory  Products    Price  Average\n");
         printf("Book      %8d %8.2f %8.2f\n", nBooks, booksPrice,
                nBooks > 0 ? booksPrice/nBooks : 0);
         printf("Painting  %8d %8.2f %8.2f\n", nPaintings, paintingsPrice,
