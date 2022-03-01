@@ -4,7 +4,7 @@
  * AUTHOR 1: MIGUEL LOPEZ LOPEZ            LOGIN 1: m.llopez
  * AUTHOR 2: DANIEL FERNÁNDEZ FEÁS         LOGIN 2: daniel.fernandezf
  * GROUP: 4.4
- * DATE: ** / ** / 2022
+ * DATE: 04 / 03 / 2022
  */
 
 #include "dynamic_list.h"
@@ -14,7 +14,8 @@
 #include "types.h"
 
 /*Determina si hay memoria suficiente para almacenar un elemento nuevo de la lista.
- *Output: true en caso de que haya memoria, false en caso contrario.
+ *Entrada: Puntero a la posición a reservar
+ *Salida: true en caso de que haya memoria, false en caso contrario.
  */
 bool createNode(tPosL *pos) {
     *pos = malloc(sizeof(struct tNode));
