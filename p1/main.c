@@ -104,8 +104,8 @@ char *categoryToString(tProductCategory category){
 int stats(tList list) {
     tPosL pos;
     tItemL item;
-    int nBooks=0, nPaintings=0;
-    float booksPrice=0, paintingsPrice=0;
+    int nBooks, nPaintings;
+    float booksPrice, paintingsPrice;
 
     if(!isEmptyList(list)){
         nBooks=0; nPaintings=0;
@@ -144,7 +144,7 @@ int bid(char *productId, char *userId, char *productPrice, tList *list) {
     tItemL item;
     tPosL pos;
 
-    do{
+    do{ // uso de do while para evitar ejecutar código innecesario cuando falla una condición
         if((pos = findItem(productId, *list)) == LNULL) break;
         else item = getItem(pos, *list);
 
