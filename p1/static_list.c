@@ -4,7 +4,7 @@
  * AUTHOR 1: MIGUEL LOPEZ LOPEZ            LOGIN 1: m.llopez
  * AUTHOR 2: DANIEL FERNÁNDEZ FEÁS         LOGIN 2: daniel.fernandezf
  * GROUP: 4.4
- * DATE: ** / ** / 2022
+ * DATE: 11 / 03 / 2022
  */
 
 #include "static_list.h"
