@@ -143,7 +143,6 @@ int bid(char *productId, char *userId, char *productPrice, tList *list) {
     
     tItemL item;
     tPosL pos;
-    bool data = true; //será true si se cumplen las condiciones de puja
 
     do{
         if((pos = findItem(productId, *list)) == LNULL) break;
