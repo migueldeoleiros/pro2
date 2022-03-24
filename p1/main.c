@@ -4,7 +4,7 @@
  * AUTHOR 1: MIGUEL LOPEZ LOPEZ            LOGIN 1: m.llopez
  * AUTHOR 2: DANIEL FERNÁNDEZ FEÁS         LOGIN 2: daniel.fernandezf
  * GROUP: 4.4
- * DATE: ** / ** / 2022
+ * DATE: 25 / 03 / 2022
  */
 
 #include <stdio.h>
@@ -20,6 +20,48 @@
 #ifdef STATIC_LIST
 #include "static_list.h"
 #endif
+
+void new(char *productId, char *userId, char *productCategory,
+         char *productPrice, tList *list);
+/*Da de alta un nuevo producto
+ *Entrada: productId ID del producto a añadir
+ *         userId ID del vendedor
+ *         productCategory categoria del producto
+ *         productPrice precio del producto
+ *         list lista a la que añadir el producto
+ *Poscondición: Se añade el elemento con los parametros dados a la lista
+ *              y se notifica de ello o se notifica de un error.
+ */
+
+void stats(tList list);
+/*Imprime un Listado de los productos actuales y sus datos
+ *Entrada: list lista con los datos
+ *Poscondición: Se imprime un listado con los productos y datos.
+ */
+
+void bid(char *productId, char *userId, char *productPrice, tList *list);
+/* Puja por un determinado producto
+ *Entrada: productId ID del producto a pujar
+ *         userId ID del vendedor
+ *         productPrice nuevo precio del producto
+ *         list lista que contiene el producto
+ *Poscondición: Se modifica el producto y se notifica de ello o se
+ *              notifica de un error.
+ */
+
+void delete(char *productId, tList *list);
+/*Da de baja un producto (lo borra)
+ *Entrada: productId ID del producto a borrar
+ *         list lista donde se encuentra el producto a borrar
+ *Poscondición: Se borra el elemento si existe, y se notifica de ello
+ *              o se notifica de un error.
+ */
+
+char *categoryToString(tProductCategory category);
+/* Pasa a tipo char* un tProductCategory
+ *Entrada: category la categoría a transformar
+ *Salida: char* con la equivalencia
+ */
 
 
 void new(char *productId, char *userId, char *productCategory,
