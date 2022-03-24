@@ -29,32 +29,32 @@ void new(char *productId, char *userId, char *productCategory,
  *         productCategory categoria del producto
  *         productPrice precio del producto
  *         list lista a la que añadir el producto
- *Poscondición: Se añade el elemento con los parametros dados a la lista
- *              y se notifica de ello o se notifica de un error.
+ *Salida: Se añade el elemento con los parametros dados a la lista
+ *        y se notifica de ello o se notifica de un error.
  */
 
 void stats(tList list);
 /*Imprime un Listado de los productos actuales y sus datos
  *Entrada: list lista con los datos
- *Poscondición: Se imprime un listado con los productos y datos.
+ *Salida: Se imprime un listado con los productos y datos.
  */
 
 void bid(char *productId, char *userId, char *productPrice, tList *list);
 /* Puja por un determinado producto
  *Entrada: productId ID del producto a pujar
- *         userId ID del vendedor
+ *         userId ID del pujador
  *         productPrice nuevo precio del producto
  *         list lista que contiene el producto
- *Poscondición: Se modifica el producto y se notifica de ello o se
- *              notifica de un error.
+ *Salida: Se modifica el producto y se notifica de ello o se
+ *        notifica de un error.
  */
 
 void delete(char *productId, tList *list);
 /*Da de baja un producto (lo borra)
  *Entrada: productId ID del producto a borrar
  *         list lista donde se encuentra el producto a borrar
- *Poscondición: Se borra el elemento si existe, y se notifica de ello
- *              o se notifica de un error.
+ *Salida: Se borra el elemento si existe, y se notifica de ello
+ *        o se notifica de un error.
  */
 
 char *categoryToString(tProductCategory category);
@@ -138,10 +138,43 @@ void stats(tList list) {
 
 void bid(char *productId, char *userId, char *productPrice, tList *list) {
     
+    tItemL item;
+    tPosL pos;
+    bool data = true; //será true si se cumplen las condiciones de puja
+
+    if((pos = findItem(productId, *list)) == LNULL) data = false;
+    else item = getItem(pos, *list);
+
+    if(strcmp(item.seller, userId) == 0) data = false;
+
+    if(item.productPrice >= atof(productPrice)) data = false;
+    else item.productPrice = atof(productPrice);
+
+    item.bidCounter ++;
+
+    if(data){
+        updateItem(item, pos, list);
+        printf("* Bid: product %s seller %s category %s price %.2f bids %d\n",
+               item.productId, item.seller, categoryToString(item.productCategory)
+               , item.productPrice, item.bidCounter);
+    }else 
+        printf("+ Error: Bid not possible\n");
 }
 
 void delete(char *productId, tList *list) {
+
+    tItemL item;
+    tPosL pos;
     
+    if((pos = findItem(productId, *list)) != LNULL){
+        item = getItem(pos, *list);
+        deleteAtPosition(pos, list);
+
+        printf("* Delete: product %s seller %s category %s price %.2f bids %d\n",
+               item.productId, item.seller, categoryToString(item.productCategory)
+               , item.productPrice, item.bidCounter);
+    }else 
+        printf("+ Error: Delete not possible\n");
 }
 
 void processCommand(char *commandNumber, char command, char *param1,
