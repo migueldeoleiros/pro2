@@ -70,6 +70,21 @@ int delete(char *productId, tList *list);
  *        si no se retorna 1.
  */
 
+void processCommand(char *commandNumber, char command, char *param1,
+                    char *param2, char *param3, char *param4, tList *list);
+/*Dado un comando y sus parametros ejecuta la función adecuada 
+ *Entrada: commandNumber el número del comando
+ *         command el commando que se quiere ejecutar
+ *         param.. los parametros del comando a ejecutar
+ *         list la lista en la que se ejecuta el comando
+ *Salida: se ejecuta el comando pedido.
+ */
+
+void readTasks(char *filename);
+/*Lee cada linea de un archivo y ejecuta los comandos en ellas
+ *Entrada: filename el nombre del archivo a leer
+ *Salida: se llama a processCommand para cada linea.
+ */
 
 char *categoryToString(tProductCategory category){
 
