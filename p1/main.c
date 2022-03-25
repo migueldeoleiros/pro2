@@ -21,6 +21,18 @@
 #include "static_list.h"
 #endif
 
+char *categoryToString(tProductCategory category);
+/* Pasa a tipo char* un tProductCategory
+ *Entrada: category la categoría a transformar
+ *Salida: char* con la equivalencia o NULL si no exites
+ */
+
+tProductCategory stringToCategory(char* category);
+/* Pasa a tipo tProductCategory un char*
+ *Entrada: category el string a transformar
+ *Salida: tProductcategory con la equivalencia o -1 si no existe
+ */
+
 int new(char *productId, char *userId, char *productCategory,
          char *productPrice, tList *list);
 /*Da de alta un nuevo producto
@@ -58,12 +70,24 @@ int delete(char *productId, tList *list);
  *        si no se retorna 1.
  */
 
-char *categoryToString(tProductCategory category);
-/* Pasa a tipo char* un tProductCategory
- *Entrada: category la categoría a transformar
- *Salida: char* con la equivalencia
- */
 
+char *categoryToString(tProductCategory category){
+
+    if(category == book)
+        return "book";
+    if(category == painting)
+        return "painting";
+    return NULL;
+}
+
+tProductCategory stringToCategory(char* category){
+
+    if(strcmp(category, "book") == 0)
+        return book;
+    if(strcmp(category, "painting") == 0)
+        return painting;
+    return -1;
+}
 
 int new(char *productId, char *userId, char *productCategory,
          char *productPrice, tList *list) {
@@ -74,16 +98,15 @@ int new(char *productId, char *userId, char *productCategory,
 
     strcpy(item.productId, productId);
     
-    if(strcmp(productCategory, "book") == 0)
-        item.productCategory = book;
-    else
-        item.productCategory = painting;
+    //el output de stringtoCategory se comprueba abajo
+    item.productCategory = stringToCategory(productCategory);
         
     item.productPrice = atof(productPrice);
 
     item.bidCounter = 0;
 
-    if(findItem(productId, *list) == LNULL && insertItem(item, LNULL, list)){
+    if(findItem(productId, *list) == LNULL && item.productCategory != -1 &&
+       insertItem(item, LNULL, list)){
         printf("* New: product %s seller %s category %s price %s\n",
                productId, userId, productCategory, productPrice);
         return 0; 
@@ -91,14 +114,6 @@ int new(char *productId, char *userId, char *productCategory,
     printf("+ Error: New not possible\n");
     return 1;
     
-}
-
-char *categoryToString(tProductCategory category){
-
-    if(category == book)
-        return "book";
-    else
-        return "painting";
 }
 
 int stats(tList list) {
@@ -111,6 +126,7 @@ int stats(tList list) {
         nBooks=0; nPaintings=0;
         booksPrice=0; paintingsPrice=0;
 
+        //recorre la lista
         for(pos = first(list); pos != LNULL; pos = next(pos, list)){
             item = getItem(pos, list);
 
@@ -118,6 +134,7 @@ int stats(tList list) {
                    item.productId, item.seller, categoryToString(item.productCategory),
                    item.productPrice, item.bidCounter);
 
+            //suma a la categoría adecuada
             if(item.productCategory == book){
                 nBooks++;
                 booksPrice += item.productPrice;
@@ -129,9 +146,9 @@ int stats(tList list) {
 
         printf("\nCategory  Products    Price  Average\n");
         printf("Book      %8d %8.2f %8.2f\n", nBooks, booksPrice,
-               nBooks > 0 ? booksPrice/nBooks : 0);
+               nBooks > 0 ? booksPrice/nBooks : 0);//evitar division entre 0
         printf("Painting  %8d %8.2f %8.2f\n", nPaintings, paintingsPrice,
-               nPaintings > 0 ? paintingsPrice/nPaintings : 0);
+               nPaintings > 0 ? paintingsPrice/nPaintings : 0);//evitar division entre 0
         return 0;
     }
     printf("+ Error: Stats not posible\n");
@@ -144,7 +161,8 @@ int bid(char *productId, char *userId, char *productPrice, tList *list) {
     tItemL item;
     tPosL pos;
 
-    do{ // uso de do while para evitar ejecutar código innecesario cuando falla una condición
+    // uso do while para evitar ejecutar código innecesario cuando falla una condición
+    do{
         if((pos = findItem(productId, *list)) == LNULL) break;
         else item = getItem(pos, *list);
 
@@ -157,8 +175,8 @@ int bid(char *productId, char *userId, char *productPrice, tList *list) {
 
         updateItem(item, pos, list);
         printf("* Bid: product %s seller %s category %s price %.2f bids %d\n",
-               item.productId, item.seller, categoryToString(item.productCategory)
-               , item.productPrice, item.bidCounter);
+               item.productId, item.seller, categoryToString(item.productCategory),
+               item.productPrice, item.bidCounter);
         return 0;
     }while(0);
     printf("+ Error: Bid not possible\n");
