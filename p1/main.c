@@ -175,8 +175,8 @@ int delete(char *productId, tList *list) {
         deleteAtPosition(pos, list);
 
         printf("* Delete: product %s seller %s category %s price %.2f bids %d\n",
-               item.productId, item.seller, categoryToString(item.productCategory)
-               , item.productPrice, item.bidCounter);
+               item.productId, item.seller, categoryToString(item.productCategory),
+               item.productPrice, item.bidCounter);
         return 0;
     } 
     printf("+ Error: Delete not possible\n");
