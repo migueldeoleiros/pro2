@@ -1,0 +1,16 @@
+Empty stack: yes.
+* Pushing some bids:
+Empty stack: no, peek: user1 10.00.
+Empty stack: no, peek: user2 20.00.
+Empty stack: no, peek: user3 30.00.
+* Poping a bid:
+Empty stack: no, peek: user2 20.00.
+* Pushing a bid:
+Empty stack: no, peek: user4 40.00.
+* Clearing stack:
+Empty stack: no, peek: user2 20.00.
+Empty stack: no, peek: user1 10.00.
+Empty stack: yes.
+* Pushing and poping a bid:
+Empty stack: no, peek: user5 50.00.
+Empty stack: yes.

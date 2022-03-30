@@ -1,0 +1,64 @@
+********************
+01 N: product product3 seller user1 category painting price 150.00
+* New: product product3 seller user1 category painting price 150.00
+********************
+02 S
+Product product3 seller user1 category painting price 150.00. No bids
+
+Category  Products    Price    Average
+Book       0          0.00       0.00
+Painting   1        150.00     150.00
+Top bid not possible
+********************
+03 N: product product1 seller user1 category painting price 120.00
+* New: product product1 seller user1 category painting price 120.00
+********************
+04 S
+Product product1 seller user1 category painting price 120.00. No bids
+Product product3 seller user1 category painting price 150.00. No bids
+
+Category  Products    Price    Average
+Book       0          0.00       0.00
+Painting   2        270.00     135.00
+Top bid not possible
+********************
+05 N: product product4 seller user2 category book price 20.00
+* New: product product4 seller user2 category book price 20.00
+********************
+06 S
+Product product1 seller user1 category painting price 120.00. No bids
+Product product3 seller user1 category painting price 150.00. No bids
+Product product4 seller user2 category book price 20.00. No bids
+
+Category  Products    Price    Average
+Book       1         20.00      20.00
+Painting   2        270.00     135.00
+Top bid not possible
+********************
+07 N: product product2 seller user2 category book price 39.50
+* New: product product2 seller user2 category book price 39.50
+********************
+08 S
+Product product1 seller user1 category painting price 120.00. No bids
+Product product2 seller user2 category book price 39.50. No bids
+Product product3 seller user1 category painting price 150.00. No bids
+Product product4 seller user2 category book price 20.00. No bids
+
+Category  Products    Price    Average
+Book       2         59.50      29.75
+Painting   2        270.00     135.00
+Top bid not possible
+********************
+09 N: product product3 seller user3 category book price 19.50
++ Error: New not possible
+********************
+10 S
+Product product1 seller user1 category painting price 120.00. No bids
+Product product2 seller user2 category book price 39.50. No bids
+Product product3 seller user1 category painting price 150.00. No bids
+Product product4 seller user2 category book price 20.00. No bids
+
+Category  Products    Price    Average
+Book       2         59.50      29.75
+Painting   2        270.00     135.00
+Top bid not possible

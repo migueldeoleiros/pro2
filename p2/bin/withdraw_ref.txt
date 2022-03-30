@@ -1,0 +1,65 @@
+********************
+01 N: product product1 seller user1 category painting price 150.00
+* New: product product1 seller user1 category painting price 150.00
+********************
+02 N: product product2 seller user1 category painting price 120.00
+* New: product product2 seller user1 category painting price 120.00
+********************
+03 N: product product3 seller user2 category book price 20.00
+* New: product product3 seller user2 category book price 20.00
+********************
+04 N: product product4 seller user2 category book price 39.50
+* New: product product4 seller user2 category book price 39.50
+********************
+05 S
+Product product1 seller user1 category painting price 150.00. No bids
+Product product2 seller user1 category painting price 120.00. No bids
+Product product3 seller user2 category book price 20.00. No bids
+Product product4 seller user2 category book price 39.50. No bids
+
+Category  Products    Price    Average
+Book       2         59.50      29.75
+Painting   2        270.00     135.00
+Top bid not possible
+********************
+06 B: product product2 bidder user2 price 125.00
+* Bid: product product2 bidder user2 category painting price 125.00 bids  1
+********************
+07 S
+Product product1 seller user1 category painting price 150.00. No bids
+Product product2 seller user1 category painting price 120.00 bids 1 top bidder user2
+Product product3 seller user2 category book price 20.00. No bids
+Product product4 seller user2 category book price 39.50. No bids
+
+Category  Products    Price    Average
+Book       2         59.50      29.75
+Painting   2        270.00     135.00
+Top bid: Product product2 seller user1 category painting price 120.00 bidder user2 top price 125.00 increase 4.17%
+********************
+08 W: product product2 bidder user2
+* Withdraw: product product2 bidder user2 category painting price 125.00 bids  1
+********************
+09 S
+Product product1 seller user1 category painting price 150.00. No bids
+Product product2 seller user1 category painting price 120.00. No bids
+Product product3 seller user2 category book price 20.00. No bids
+Product product4 seller user2 category book price 39.50. No bids
+
+Category  Products    Price    Average
+Book       2         59.50      29.75
+Painting   2        270.00     135.00
+Top bid not possible
+********************
+10 B: product product2 bidder user3 price 180.00
+* Bid: product product2 bidder user3 category painting price 180.00 bids  1
+********************
+11 S
+Product product1 seller user1 category painting price 150.00. No bids
+Product product2 seller user1 category painting price 120.00 bids 1 top bidder user3
+Product product3 seller user2 category book price 20.00. No bids
+Product product4 seller user2 category book price 39.50. No bids
+
+Category  Products    Price    Average
+Book       2         59.50      29.75
+Painting   2        270.00     135.00
+Top bid: Product product2 seller user1 category painting price 120.00 bidder user3 top price 180.00 increase 50.00%

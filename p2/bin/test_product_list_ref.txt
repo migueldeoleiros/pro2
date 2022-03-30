@@ -1,0 +1,18 @@
+( )
+( p3 price 30.00 )
+( p1 price 10.00 p3 price 30.00 )
+( p1 price 10.00 p3 price 30.00 p5 price 50.00 )
+( p1 price 10.00 p2 price 20.00 p3 price 30.00 p5 price 50.00 )
+( p1 price 10.00 p2 price 20.00 p3 price 30.00 p4 price 40.00 p5 price 50.00 )
+p33 Not found
+p1 10.00
+p5 50.00
+p3 30.00
+p3 300.00
+( p1 price 10.00 p2 price 20.00 p3 price 300.00 p4 price 40.00 p5 price 50.00 )
+( p1 price 10.00 p3 price 300.00 p4 price 40.00 p5 price 50.00 )
+( p1 price 10.00 p3 price 300.00 p5 price 50.00 )
+( p3 price 300.00 p5 price 50.00 )
+( p3 price 300.00 )
+( )
+( p4 price 40.00 )
