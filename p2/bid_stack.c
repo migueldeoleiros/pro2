@@ -9,4 +9,26 @@
 
 #include "bid_stack.h"
 
-/* Write your code here... */
+void createEmptyStack(tStack *stack) { stack->top = SNULL; }
+
+bool push(tItemS item, tStack *stack) {
+    if (stack->top == SMAX - 1) { //si pila llena
+        return false;
+    } else { 
+        stack->top++;
+        stack->data[stack->top] = item;
+    }
+    return true;
+}
+
+void pop(tStack *stack) {
+    stack->top--; 
+}
+
+tItemS peek(tStack stack) {
+    return stack.data[stack.top];
+}
+
+bool isEmptyStack(tStack stack) {
+    return (stack.top == SNULL);
+}
