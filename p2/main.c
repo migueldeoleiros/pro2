@@ -134,13 +134,14 @@ tProductCategory stringToCategory(char* category){
     return -1;
 }
 
-char *bidsToString(int nBids){
+char *bidsToString(tItemL item){
 
-    if(!nBids)
+    if(!item.bidCounter)
         return ". No bids";
 
     char * out = (char*)malloc(8 * sizeof(char));
-    sprintf(out," bids %d", nBids);
+    sprintf(out," bids %d top bidder %s", item.bidCounter,
+                                          peek(item.bidStack).bidder);
     return out;
 }
 
@@ -179,7 +180,7 @@ int stats(tList list) {
     int nBooks, nPaintings;
     float booksPrice, paintingsPrice;
 
-    float inc, aux=0;
+    float inc, maxInc, nbids=0;
 
     if(!isEmptyList(list)){
         nBooks=0; nPaintings=0;
@@ -191,7 +192,7 @@ int stats(tList list) {
 
             printf("Product %s seller %s category %s price %.2f%s\n",
                    item.productId, item.seller, categoryToString(item.productCategory),
-                   item.productPrice, bidsToString(item.bidCounter));
+                   item.productPrice, bidsToString(item));
 
             //suma a la categoría adecuada
             if(item.productCategory == book){
@@ -202,10 +203,15 @@ int stats(tList list) {
                 paintingsPrice += item.productPrice;
             }
 
-            aux = inc;
-            inc = item.productPrice/(peek(item.bidStack).productPrice - item.productPrice);
-            if(inc > aux) mostInc = item;
-            else inc = aux;
+            maxInc = inc;
+            if(!isEmptyStack(item.bidStack)){
+                inc = ((peek(item.bidStack).productPrice - item.productPrice) /
+                       item.productPrice) * 100;
+                nbids++;
+            }
+
+            if(inc > maxInc) mostInc = item;
+            else inc = maxInc;
         }
 
         printf("\nCategory  Products    Price  Average\n");
@@ -214,11 +220,11 @@ int stats(tList list) {
         printf("Painting  %8d %8.2f %8.2f\n", nPaintings, paintingsPrice,
                nPaintings > 0 ? paintingsPrice/nPaintings : 0);//evitar division entre 0
         
-        if(!aux){
-            printf("\nTop bid: Product %s seller %s category %s price %.2f bidder %s top price %.2f increase %.2f\n",
+        if(nbids != 0){
+            printf("Top bid: Product %s seller %s category %s price %.2f bidder %s top price %.2f increase %.2f%%\n",
                    mostInc.productId, mostInc.seller, categoryToString(mostInc.productCategory),
                    mostInc.productPrice, peek(mostInc.bidStack).bidder,
-                   peek(mostInc.bidStack).productPrice, aux );
+                   peek(mostInc.bidStack).productPrice, maxInc );
         }else printf("Top bid not possible\n");
 
         return 0;
@@ -230,6 +236,7 @@ int stats(tList list) {
 int bid(char *productId, char *userId, char *price, tList *list) {
     
     tItemL item;
+    tItemS itemStack;
     tPosL pos;
 
     // uso do while para evitar ejecutar código innecesario cuando falla una condición
@@ -240,14 +247,17 @@ int bid(char *productId, char *userId, char *price, tList *list) {
         if(strcmp(item.seller, userId) == 0) break;
 
         if(item.productPrice >= atof(price)) break;
-        else item.productPrice = atof(price);
+        else itemStack.productPrice = atof(price);
 
+        if(strcpy(itemStack.bidder, userId) == 0) break;
+
+        push(itemStack, &item.bidStack);
         item.bidCounter ++;
 
         updateItem(item, pos, list);
-        printf("* Bid: product %s seller %s category %s price %.2f bids %d\n",
-               item.productId, item.seller, categoryToString(item.productCategory),
-               item.productPrice, item.bidCounter);
+        printf("* Bid: product %s bidder %s category %s price %s bids %d\n",
+               item.productId, userId, categoryToString(item.productCategory),
+               price, item.bidCounter);
         return 0;
     }while(0);
     printf("+ Error: Bid not possible\n");
