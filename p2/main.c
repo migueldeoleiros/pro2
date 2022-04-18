@@ -134,6 +134,16 @@ tProductCategory stringToCategory(char* category){
     return -1;
 }
 
+char *bidsToString(int nBids){
+
+    if(!nBids)
+        return ". No bids";
+
+    char * out = (char*)malloc(8 * sizeof(char));
+    sprintf(out," bids %d", nBids);
+    return out;
+}
+
 int new(char *productId, char *userId, char *productCategory,
          char *productPrice, tList *list) {
 
@@ -165,9 +175,11 @@ int new(char *productId, char *userId, char *productCategory,
 
 int stats(tList list) {
     tPosL pos;
-    tItemL item;
+    tItemL item, mostInc;
     int nBooks, nPaintings;
     float booksPrice, paintingsPrice;
+
+    float inc, aux=0;
 
     if(!isEmptyList(list)){
         nBooks=0; nPaintings=0;
@@ -177,9 +189,9 @@ int stats(tList list) {
         for(pos = first(list); pos != LNULL; pos = next(pos, list)){
             item = getItem(pos, list);
 
-            printf("Product %s seller %s category %s price %.2f bids %d\n",
+            printf("Product %s seller %s category %s price %.2f%s\n",
                    item.productId, item.seller, categoryToString(item.productCategory),
-                   item.productPrice, item.bidCounter);
+                   item.productPrice, bidsToString(item.bidCounter));
 
             //suma a la categoría adecuada
             if(item.productCategory == book){
@@ -189,6 +201,11 @@ int stats(tList list) {
                 nPaintings++;
                 paintingsPrice += item.productPrice;
             }
+
+            aux = inc;
+            inc = item.productPrice/(peek(item.bidStack).productPrice - item.productPrice);
+            if(inc > aux) mostInc = item;
+            else inc = aux;
         }
 
         printf("\nCategory  Products    Price  Average\n");
@@ -197,9 +214,12 @@ int stats(tList list) {
         printf("Painting  %8d %8.2f %8.2f\n", nPaintings, paintingsPrice,
                nPaintings > 0 ? paintingsPrice/nPaintings : 0);//evitar division entre 0
         
-        /* printf("\nTop bid: Product %s seller %s category %s price %.2f bidder %s top price %.2f increase %.2f\n", */
-        /*       item.productId, item.seller, categoryToString(item.productCategory), */
-        /*       item.productPrice, ); */
+        if(!aux){
+            printf("\nTop bid: Product %s seller %s category %s price %.2f bidder %s top price %.2f increase %.2f\n",
+                   mostInc.productId, mostInc.seller, categoryToString(mostInc.productCategory),
+                   mostInc.productPrice, peek(mostInc.bidStack).bidder,
+                   peek(mostInc.bidStack).productPrice, aux );
+        }else printf("Top bid not possible\n");
 
         return 0;
     }
