@@ -10,6 +10,7 @@
 #ifndef DYNAMIC_LIST_H
 #define DYNAMIC_LIST_H
 
+#include "bid_stack.h"
 #include "types.h"
 #include "string.h"
 #include <stdbool.h>
@@ -23,6 +24,7 @@ typedef struct tItemL {
     tProductCategory productCategory;
     tProductPrice productPrice;
     tBidCounter bidCounter;
+    tStack bidStack;
 } tItemL;
 
 typedef struct tItemL *tNode;

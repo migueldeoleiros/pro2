@@ -116,6 +116,53 @@ void readTasks(char *filename);
  */
 
 
+char *categoryToString(tProductCategory category){
+
+    if(category == book)
+        return "book";
+    if(category == painting)
+        return "painting";
+    return NULL;
+}
+
+tProductCategory stringToCategory(char* category){
+
+    if(strcmp(category, "book") == 0)
+        return book;
+    if(strcmp(category, "painting") == 0)
+        return painting;
+    return -1;
+}
+
+int new(char *productId, char *userId, char *productCategory,
+         char *productPrice, tList *list) {
+
+    tItemL item;
+
+    strcpy(item.seller, userId);
+
+    strcpy(item.productId, productId);
+    
+    //el output de stringtoCategory se comprueba abajo
+    item.productCategory = stringToCategory(productCategory);
+        
+    item.productPrice = atof(productPrice);
+
+    item.bidCounter = 0;
+
+    createEmptyStack(&item.bidStack);
+
+    if(findItem(productId, *list) == LNULL && item.productCategory != -1 &&
+       insertItem(item, list)){
+        printf("* New: product %s seller %s category %s price %s\n",
+               productId, userId, productCategory, productPrice);
+        return 0; 
+    }
+    printf("+ Error: New not possible\n");
+    return 1;
+    
+}
+
 void processCommand(char *commandNumber, char command, char *param1,
                     char *param2, char *param3, char *param4, tList *list) {
 
