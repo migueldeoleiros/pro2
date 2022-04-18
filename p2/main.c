@@ -4,7 +4,7 @@
  * AUTHOR 1: MIGUEL LOPEZ LOPEZ            LOGIN 1: m.llopez
  * AUTHOR 2: DANIEL FERNÁNDEZ FEÁS         LOGIN 2: daniel.fernandezf
  * GROUP: 4.4
- * DATE: ** / ** / **
+ * DATE: 22 / 04 / 2022
  */
 
 #include <stdio.h>
@@ -12,27 +12,154 @@
 #include <string.h>
 #include "types.h"
 
+#include "product_list.h"
+#include "bid_stack.h"
+
 #define MAX_BUFFER 255
 
+char *categoryToString(tProductCategory category);
+/* Pasa a tipo char* un tProductCategory
+ *Entrada: category la categoría a transformar
+ *Salida: char* con la equivalencia o NULL si no exites
+ */
+
+tProductCategory stringToCategory(char* category);
+/* Pasa a tipo tProductCategory un char*
+ *Entrada: category el string a transformar
+ *Salida: tProductcategory con la equivalencia o -1 si no existe
+ */
+
+int new(char *productId, char *userId, char *productCategory,
+         char *productPrice, tList *list);
+/*Da de alta un nuevo producto
+ *Entrada: productId ID del producto a añadir
+ *         userId ID del vendedor
+ *         productCategory categoria del producto
+ *         productPrice precio del producto
+ *         list lista a la que añadir el producto
+ *Salida: Si no hay error se añade el elemento a la lista y retorna 0
+ *        si no, se retorna 1.
+ *Poscondición: El contador de pujas de producto se inicializa a 0
+ *              y se asocia una nueva pila de pujas vacía.
+ */
+
+int stats(tList list);
+/*Imprime un Listado de los productos actuales y sus datos
+ *Entrada: list lista con los datos
+ *Salida: Se imprime un listado con los productos y datos y retorna 0
+ *        si hay error (la lista no existe/está vacía) se retorna 1.
+ */
+
+int bid(char *productId, char *userId, char *productPrice, tList *list);
+/* Puja por un determinado producto, si la puja supera la más alta
+ * actual se actualiza.
+ *Entrada: productId ID del producto a pujar
+ *         userId ID del pujador
+ *         productPrice nuevo precio del producto
+ *         list lista que contiene el producto
+ *Salida: Se modifica el producto y se retorna 0
+ *        si hay error (la puja no es válida) se retorna 1.
+ *Poscondición: Si la puja es válida se añade a la pila del producto
+ *              y actualiza el contador de pujas.
+ */
+
+int delete(char *productId, tList *list);
+/*Da de baja un producto (lo borra)
+ *Entrada: productId ID del producto a borrar
+ *         list lista donde se encuentra el producto a borrar
+ *Salida: Se borra el elemento si existe y se retorna 0
+ *        si no se retorna 1.
+ *Poscondición: Se elimina la pila de pujas asociada.
+ */
+
+int award(char *productId, tList *list);
+/*Se asigna el ganador de una puja
+ *Entrada: productId ID del producto
+ *         list lista donde se encuentra el producto
+ *Salida: Se imprime el ganador de la puja si existe y se retorna 0
+ *        si no (no existe el producto o no hay pujas) se retorna 1.
+ */
+
+int withdraw(char *productId, char *userId, tList *list);
+/*La máxima puja actual del producto es retirada
+ *Entrada: productId ID del producto 
+ *         userId ID del pujador
+ *         list lista que contiene el producto
+ *Salida: Se modifica el producto y se retorna 0
+ *        si hay error (no exite el producto, no hay pujas o userID
+ *        no corresponde) se retorna 1.
+ *Poscondición: Si no hay error se decrementa el contador de pujas.
+ */
+
+int removeEmpty(tList list);
+/*Elimina los productos sin pujas
+ *Entrada: list lista con los datos
+ *Salida: Se imprime un listado con los productos y datos borrados
+ *        y retorna 0
+ *        si hay error (no existen productos sin pujas) se retorna 1.
+ */
+
+void processCommand(char *commandNumber, char command, char *param1,
+                    char *param2, char *param3, char *param4, tList *list);
+/*Dado un comando y sus parametros ejecuta la función adecuada 
+ *Entrada: commandNumber el número del comando
+ *         command el commando que se quiere ejecutar
+ *         param.. los parametros del comando a ejecutar
+ *         list la lista en la que se ejecuta el comando
+ *Salida: se ejecuta el comando pedido.
+ */
+
+void readTasks(char *filename);
+/*Lee cada linea de un archivo y ejecuta los comandos en ellas
+ *Entrada: filename el nombre del archivo a leer
+ *Salida: se llama a processCommand para cada linea.
+ */
 
 
-void processCommand(char *commandNumber, char command, char *param1, char *param2, char *param3, char *param4) {
+void processCommand(char *commandNumber, char command, char *param1,
+                    char *param2, char *param3, char *param4, tList *list) {
+
+    printf("********************\n");
 
     switch (command) {
-        case 'N':
+        case 'N': {
+            printf("%s %c: product %s seller %s category %s price %s\n",
+                   commandNumber, command, param1, param2, param3, param4);
+            new(param1, param2, param3, param4, list);
             break;
-        case 'S':
+        }
+        case 'S': {
+            printf("%s %c \n", commandNumber, command);
+            stats(*list);
             break;
-        case 'B':
+        }
+        case 'B': {
+            printf("%s %c: product %s bidder %s price %s\n",
+                   commandNumber, command, param1, param2, param3);
+            bid(param1, param2, param3, list);
             break;
-        case 'D':
+        }
+        case 'D': {
+            printf("%s %c: product %s\n", commandNumber, command, param1);
+            delete(param1, list);
             break;
-        case 'A':
+        }
+        case 'A': {
+            printf("%s %c: product %s\n", commandNumber, command, param1);
+            award(param1, list);
             break;
-        case 'W':
+        }
+        case 'W': {
+            printf("%s %c: product %s bidder %s\n",
+                   commandNumber, command, param1, param2);
+            withdraw(param1, param2, list);
             break;
-        case 'R':
+        }
+        case 'R': {
+            printf("%s %c \n", commandNumber, command);
+            removeEmpty(*list);
             break;
+        }
         default:
             break;
     }
@@ -43,6 +170,10 @@ void readTasks(char *filename) {
     char *commandNumber, *command, *param1, *param2, *param3, *param4;
     const char delimiters[] = " \n\r";
     char buffer[MAX_BUFFER];
+
+    //Crear lista
+    tList list;
+    createEmptyList(&list);
 
     f = fopen(filename, "r");
 
@@ -56,7 +187,8 @@ void readTasks(char *filename) {
             param3 = strtok(NULL, delimiters);
             param4 = strtok(NULL, delimiters);
 
-            processCommand(commandNumber, command[0], param1, param2, param3, param4);
+            processCommand(commandNumber, command[0], param1, param2,
+                           param3, param4, &list);
         }
 
         fclose(f);
@@ -65,7 +197,6 @@ void readTasks(char *filename) {
         printf("Cannot open file %s.\n", filename);
     }
 }
-
 
 int main(int nargs, char **args) {
 
@@ -83,9 +214,3 @@ int main(int nargs, char **args) {
 
     return 0;
 }
-
-
-
-
-
-
