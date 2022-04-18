@@ -163,6 +163,93 @@ int new(char *productId, char *userId, char *productCategory,
     
 }
 
+int stats(tList list) {
+    tPosL pos;
+    tItemL item;
+    int nBooks, nPaintings;
+    float booksPrice, paintingsPrice;
+
+    if(!isEmptyList(list)){
+        nBooks=0; nPaintings=0;
+        booksPrice=0; paintingsPrice=0;
+
+        //recorre la lista
+        for(pos = first(list); pos != LNULL; pos = next(pos, list)){
+            item = getItem(pos, list);
+
+            printf("Product %s seller %s category %s price %.2f bids %d\n",
+                   item.productId, item.seller, categoryToString(item.productCategory),
+                   item.productPrice, item.bidCounter);
+
+            //suma a la categoría adecuada
+            if(item.productCategory == book){
+                nBooks++;
+                booksPrice += item.productPrice;
+            }else{
+                nPaintings++;
+                paintingsPrice += item.productPrice;
+            }
+        }
+
+        printf("\nCategory  Products    Price  Average\n");
+        printf("Book      %8d %8.2f %8.2f\n", nBooks, booksPrice,
+               nBooks > 0 ? booksPrice/nBooks : 0);//evitar division entre 0
+        printf("Painting  %8d %8.2f %8.2f\n", nPaintings, paintingsPrice,
+               nPaintings > 0 ? paintingsPrice/nPaintings : 0);//evitar division entre 0
+        
+        /* printf("\nTop bid: Product %s seller %s category %s price %.2f bidder %s top price %.2f increase %.2f\n", */
+        /*       item.productId, item.seller, categoryToString(item.productCategory), */
+        /*       item.productPrice, ); */
+
+        return 0;
+    }
+    printf("+ Error: Stats not posible\n");
+    return 1;
+}
+
+int bid(char *productId, char *userId, char *price, tList *list) {
+    
+    tItemL item;
+    tPosL pos;
+
+    // uso do while para evitar ejecutar código innecesario cuando falla una condición
+    do{
+        if((pos = findItem(productId, *list)) == LNULL) break;
+        else item = getItem(pos, *list);
+
+        if(strcmp(item.seller, userId) == 0) break;
+
+        if(item.productPrice >= atof(price)) break;
+        else item.productPrice = atof(price);
+
+        item.bidCounter ++;
+
+        updateItem(item, pos, list);
+        printf("* Bid: product %s seller %s category %s price %.2f bids %d\n",
+               item.productId, item.seller, categoryToString(item.productCategory),
+               item.productPrice, item.bidCounter);
+        return 0;
+    }while(0);
+    printf("+ Error: Bid not possible\n");
+    return 1;
+}
+
+int delete(char *productId, tList *list) {
+    return 1;
+}
+
+int award(char *productId, tList *list){
+    return 1;
+}
+
+int withdraw(char *productId, char *userId, tList *list){
+    return 1;
+}
+
+int removeEmpty(tList list){
+    return 1;
+}
+
 void processCommand(char *commandNumber, char command, char *param1,
                     char *param2, char *param3, char *param4, tList *list) {
 
