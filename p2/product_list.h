@@ -60,7 +60,7 @@ tPosL first(tList);
 tPosL last(tList);
 /*Devuelve la posición del último elemento de la lista
  *Entrada: lista a porcesar
- *Salida: Posición del primer último de la lista 
+ *Salida: Posición del último elemento de la lista 
  *Precondición: La lista no está vacía
  */
 
@@ -105,7 +105,7 @@ tItemL getItem(tPosL, tList);
 /*Devuelve el contenido del elemento de la lista que ocupa la posición indicada.
  *Entrada: lista a porcesar
  *         posición del elemento a obtener
- *Salida: elemento en la posición dada
+ *Salida: Elemento en la posición dada
  *Precondición: La posición indicada es una posición válida en la lista.
  */
 

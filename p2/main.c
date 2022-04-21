@@ -44,9 +44,9 @@ int new(char *productId, char *userId, char *productCategory,
  */
 
 int stats(tList list);
-/*Imprime un Listado de los productos actuales y sus datos
+/*Imprime un listado de los productos actuales y sus datos
  *Entrada: list lista con los datos
- *Salida: Se imprime un listado con los productos y datos y retorna 0
+ *Salida: Si el listado se ha mostrado se retorna 0
  *        si hay error (la lista no existe/está vacía) se retorna 1.
  */
 
@@ -76,7 +76,7 @@ int award(char *productId, tList *list);
 /*Se asigna el ganador de una puja
  *Entrada: productId ID del producto
  *         list lista donde se encuentra el producto
- *Salida: Se imprime el ganador de la puja si existe y se retorna 0
+ *Salida: Si se ha mostrado el ganador de la puja se retorna 0
  *        si no (no existe el producto o no hay pujas) se retorna 1.
  */
 
@@ -92,10 +92,9 @@ int withdraw(char *productId, char *userId, tList *list);
  */
 
 int removeEmpty(tList list);
-/*Elimina los productos sin pujas
+/*Muestra y elimina los productos sin pujas 
  *Entrada: list lista con los datos
- *Salida: Se imprime un listado con los productos y datos borrados
- *        y retorna 0
+ *Salida: Si se elimina algun producto retorna 0
  *        si hay error (no existen productos sin pujas) se retorna 1.
  */
 
@@ -106,13 +105,13 @@ void processCommand(char *commandNumber, char command, char *param1,
  *         command el commando que se quiere ejecutar
  *         param.. los parametros del comando a ejecutar
  *         list la lista en la que se ejecuta el comando
- *Salida: se ejecuta el comando pedido.
+ *Poscondición: Se ejecuta el comando pedido.
  */
 
 void readTasks(char *filename);
 /*Lee cada linea de un archivo y ejecuta los comandos en ellas
  *Entrada: filename el nombre del archivo a leer
- *Salida: se llama a processCommand para cada linea.
+ *Poscondición: Se llama a processCommand para cada linea.
  */
 
 
@@ -180,7 +179,8 @@ int stats(tList list) {
     int nBooks, nPaintings;
     float booksPrice, paintingsPrice;
 
-    float inc, maxInc, nbids=0;
+    float inc=0, maxInc=0, nbids=0;
+    tItemS topBid;
 
     if(!isEmptyList(list)){
         nBooks=0; nPaintings=0;
@@ -203,15 +203,15 @@ int stats(tList list) {
                 paintingsPrice += item.productPrice;
             }
 
-            maxInc = inc;
+            maxInc = inc; //El anteriro inc es en nuevo maxInc
             if(!isEmptyStack(item.bidStack)){
                 inc = ((peek(item.bidStack).productPrice - item.productPrice) /
-                       item.productPrice) * 100;
+                       item.productPrice) * 100; //calculamos nuevo inc
                 nbids++;
             }
 
-            if(inc > maxInc) mostInc = item;
-            else inc = maxInc;
+            if(inc > maxInc) mostInc = item; //Si el nuevo inc es mayor asignamos mostInc
+            else inc = maxInc; //descartamos valor como nuevo maxInc 
         }
 
         printf("\nCategory  Products    Price  Average\n");
@@ -220,12 +220,13 @@ int stats(tList list) {
         printf("Painting  %8d %8.2f %8.2f\n", nPaintings, paintingsPrice,
                nPaintings > 0 ? paintingsPrice/nPaintings : 0);//evitar division entre 0
         
-        if(nbids != 0){
+        if(nbids != 0){ //Solo hay TopBid si encontramos algun bidStack no vacío
+            topBid = peek(mostInc.bidStack);
             printf("Top bid: Product %s seller %s category %s price %.2f bidder %s top price %.2f increase %.2f%%\n",
                    mostInc.productId, mostInc.seller, categoryToString(mostInc.productCategory),
-                   mostInc.productPrice, peek(mostInc.bidStack).bidder,
-                   peek(mostInc.bidStack).productPrice, maxInc );
-        }else printf("Top bid not possible\n");
+                   mostInc.productPrice, topBid.bidder, topBid.productPrice, maxInc );
+        }else
+            printf("Top bid not possible\n");
 
         return 0;
     }
