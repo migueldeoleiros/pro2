@@ -284,6 +284,29 @@ int delete(char *productId, tList *list) {
 }
 
 int award(char *productId, tList *list){
+    tItemL item;
+    tItemS itemStack;
+    tPosL pos;
+
+    if((pos = findItem(productId, *list)) != LNULL){
+        item = getItem(pos,*list);
+    
+        //si no tiene pujas se sale con error
+        if(isEmptyStack(item.bidStack)) return 1;
+        itemStack = peek(item.bidStack);
+
+        printf("* Award: product %s bidder %s category %s price %.2f\n",
+               item.productId, itemStack.bidder, categoryToString(item.productCategory),
+               itemStack.productPrice);
+
+        //borramos el elemento
+        while(!isEmptyStack(item.bidStack)){
+            pop(&item.bidStack);
+        }
+        deleteAtPosition(pos, list);
+
+        return 0;
+    } 
     return 1;
 }
 
