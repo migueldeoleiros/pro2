@@ -91,7 +91,7 @@ int withdraw(char *productId, char *userId, tList *list);
  *Poscondición: Si no hay error se decrementa el contador de pujas.
  */
 
-int removeEmpty(tList list);
+int removeEmpty(tList *list);
 /*Muestra y elimina los productos sin pujas 
  *Entrada: list lista con los datos
  *Salida: Si se elimina algun producto retorna 0
@@ -317,14 +317,13 @@ int withdraw(char *productId, char *userId, tList *list){
 
     if((pos = findItem(productId, *list)) != LNULL){
         item = getItem(pos,*list);
-
     
         //si no tiene pujas se sale con error
         if(isEmptyStack(item.bidStack)) return 1;
         itemStack = peek(item.bidStack);
 
         //si no coincide el usuario se sale con error
-        if(itemStack.bidder != userId) return 1;
+        //if(itemStack.bidder != userId) return 1;
 
         printf("* Withdraw: product %s bidder %s category %s price %.2f bids %d\n",
                item.productId, itemStack.bidder, categoryToString(item.productCategory),
@@ -340,7 +339,28 @@ int withdraw(char *productId, char *userId, tList *list){
     return 1;
 }
 
-int removeEmpty(tList list){
+int removeEmpty(tList *list){
+    tItemL item;
+    tPosL pos;
+    bool isRemoved=false;
+
+    if(!isEmptyList(*list)){
+
+        for(pos = first(*list); pos != LNULL; pos = next(pos, *list)){
+            item = getItem(pos,*list);
+
+            if(item.bidCounter == 0){
+                printf("Removing product %s seller %s category %s price %.2f bids %d\n",
+                    item.productId, item.seller, categoryToString(item.productCategory),
+                    item.productPrice, item.bidCounter);
+
+                deleteAtPosition(pos, list);
+
+                isRemoved = true;
+            }
+        }
+        if(isRemoved) return 0; //verificamos que por lo menos un elemento se borrara
+    }
     return 1;
 }
 
@@ -391,7 +411,7 @@ void processCommand(char *commandNumber, char command, char *param1,
         }
         case 'R': {
             printf("%s %c \n", commandNumber, command);
-            if(removeEmpty(*list))
+            if(removeEmpty(list))
                 printf("+ Error: Remove not possible\n");
             break;
         }
