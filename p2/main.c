@@ -29,6 +29,19 @@ tProductCategory stringToCategory(char* category);
  *Salida: tProductcategory con la equivalencia o -1 si no existe
  */
 
+char *bidsToString(tItemL item);
+/* Crea un string con información del número de pujas de un item
+ *Entrada: item a porcesar
+ *Salida: cadena de carácteres con el número de pujas y la mayor,
+ *        en caso de no existir pujas ". No bids"
+ */
+
+float increment(tItemL item);
+/* calcula el incremento de precio de un item con su mayor puja
+ *Entrada: item a calcular
+ *Salida: porcentaje de incremento 
+ */
+
 int new(char *productId, char *userId, char *productCategory,
          char *productPrice, tList *list);
 /*Da de alta un nuevo producto
@@ -144,6 +157,11 @@ char *bidsToString(tItemL item){
     return out;
 }
 
+float increment(tItemL item){
+    float difference = peek(item.bidStack).productPrice - item.productPrice;
+    return (difference / item.productPrice) * 100;
+}
+
 int new(char *productId, char *userId, char *productCategory,
          char *productPrice, tList *list) {
 
@@ -204,8 +222,7 @@ int stats(tList list) {
 
             maxInc = inc; //El anteriro inc es en nuevo maxInc
             if(!isEmptyStack(item.bidStack)){
-                inc = ((peek(item.bidStack).productPrice - item.productPrice) /
-                       item.productPrice) * 100; //calculamos nuevo inc
+                inc = increment(item); //calculamos nuevo inc
                 nbids++;
             }
 
@@ -223,7 +240,7 @@ int stats(tList list) {
             topBid = peek(mostInc.bidStack);
             printf("Top bid: Product %s seller %s category %s price %.2f bidder %s top price %.2f increase %.2f%%\n",
                    mostInc.productId, mostInc.seller, categoryToString(mostInc.productCategory),
-                   mostInc.productPrice, topBid.bidder, topBid.productPrice, maxInc );
+                   mostInc.productPrice, topBid.bidder, topBid.productPrice, increment(mostInc) );
         }else
             printf("Top bid not possible\n");
 
