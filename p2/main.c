@@ -311,6 +311,32 @@ int award(char *productId, tList *list){
 }
 
 int withdraw(char *productId, char *userId, tList *list){
+    tItemL item;
+    tItemS itemStack;
+    tPosL pos;
+
+    if((pos = findItem(productId, *list)) != LNULL){
+        item = getItem(pos,*list);
+
+    
+        //si no tiene pujas se sale con error
+        if(isEmptyStack(item.bidStack)) return 1;
+        itemStack = peek(item.bidStack);
+
+        //si no coincide el usuario se sale con error
+        if(itemStack.bidder != userId) return 1;
+
+        printf("* Withdraw: product %s bidder %s category %s price %.2f bids %d\n",
+               item.productId, itemStack.bidder, categoryToString(item.productCategory),
+               itemStack.productPrice, item.bidCounter);
+
+        //actualizar el elemento
+        item.bidCounter--;
+        pop(&item.bidStack);
+        updateItem(item,pos,list);
+
+        return 0;
+    } 
     return 1;
 }
 
