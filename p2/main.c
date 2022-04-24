@@ -168,7 +168,6 @@ int new(char *productId, char *userId, char *productCategory,
                productId, userId, productCategory, productPrice);
         return 0; 
     }
-    printf("+ Error: New not possible\n");
     return 1;
     
 }
@@ -230,7 +229,6 @@ int stats(tList list) {
 
         return 0;
     }
-    printf("+ Error: Stats not posible\n");
     return 1;
 }
 
@@ -240,29 +238,27 @@ int bid(char *productId, char *userId, char *price, tList *list) {
     tItemS itemStack;
     tPosL pos;
 
-    // uso do while para evitar ejecutar código innecesario cuando falla una condición
-    do{
-        if((pos = findItem(productId, *list)) == LNULL) break;
-        else item = getItem(pos, *list);
+    /*Uso multimples return para evitar que se ejecute código innecesario
+      una vez que se incumpla una condición el sistema retorna el error 
+     */
+    if((pos = findItem(productId, *list)) == LNULL) return 1;
+    else item = getItem(pos, *list);
 
-        if(strcmp(item.seller, userId) == 0) break;
+    if(strcmp(item.seller, userId) == 0) return 1;
 
-        if(item.productPrice >= atof(price)) break;
-        else itemStack.productPrice = atof(price);
+    if(item.productPrice >= atof(price)) return 1;
+    else itemStack.productPrice = atof(price);
 
-        if(strcpy(itemStack.bidder, userId) == 0) break;
+    if(strcpy(itemStack.bidder, userId) == 0) return 1;
 
-        push(itemStack, &item.bidStack);
-        item.bidCounter ++;
+    push(itemStack, &item.bidStack);
+    item.bidCounter ++;
 
-        updateItem(item, pos, list);
-        printf("* Bid: product %s bidder %s category %s price %s bids %d\n",
-               item.productId, userId, categoryToString(item.productCategory),
-               price, item.bidCounter);
-        return 0;
-    }while(0);
-    printf("+ Error: Bid not possible\n");
-    return 1;
+    updateItem(item, pos, list);
+    printf("* Bid: product %s bidder %s category %s price %s bids %d\n",
+            item.productId, userId, categoryToString(item.productCategory),
+            price, item.bidCounter);
+    return 0;
 }
 
 int delete(char *productId, tList *list) {
@@ -290,39 +286,46 @@ void processCommand(char *commandNumber, char command, char *param1,
         case 'N': {
             printf("%s %c: product %s seller %s category %s price %s\n",
                    commandNumber, command, param1, param2, param3, param4);
-            new(param1, param2, param3, param4, list);
+            if(new(param1, param2, param3, param4, list))
+                printf("+ Error: New not possible\n");
             break;
         }
         case 'S': {
             printf("%s %c \n", commandNumber, command);
-            stats(*list);
+            if(stats(*list))
+                printf("+ Error: Stats not possible\n");
             break;
         }
         case 'B': {
             printf("%s %c: product %s bidder %s price %s\n",
                    commandNumber, command, param1, param2, param3);
-            bid(param1, param2, param3, list);
+            if(bid(param1, param2, param3, list))
+                printf("+ Error: Bid not possible\n");
             break;
         }
         case 'D': {
             printf("%s %c: product %s\n", commandNumber, command, param1);
-            delete(param1, list);
+            if(delete(param1, list))
+                printf("+ Error: Delete not possible\n");
             break;
         }
         case 'A': {
             printf("%s %c: product %s\n", commandNumber, command, param1);
-            award(param1, list);
+            if(award(param1, list))
+                printf("+ Error: Award not possible\n");
             break;
         }
         case 'W': {
             printf("%s %c: product %s bidder %s\n",
                    commandNumber, command, param1, param2);
-            withdraw(param1, param2, list);
+            if(withdraw(param1, param2, list))
+                printf("+ Error: Withdraw not possible\n");
             break;
         }
         case 'R': {
             printf("%s %c \n", commandNumber, command);
-            removeEmpty(*list);
+            if(removeEmpty(*list))
+                printf("+ Error: Remove not possible\n");
             break;
         }
         default:
