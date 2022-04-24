@@ -262,6 +262,24 @@ int bid(char *productId, char *userId, char *price, tList *list) {
 }
 
 int delete(char *productId, tList *list) {
+    tItemL item;
+    tPosL pos;
+    
+    if((pos = findItem(productId, *list)) != LNULL){
+        item = getItem(pos, *list);
+
+        //vacía la pila de pujas
+        while(!isEmptyStack(item.bidStack)){
+            pop(&item.bidStack);
+        }
+
+        deleteAtPosition(pos, list);
+
+        printf("* Delete: product %s seller %s category %s price %.2f bids %d\n",
+               item.productId, item.seller, categoryToString(item.productCategory),
+               item.productPrice, item.bidCounter);
+        return 0;
+    } 
     return 1;
 }
 
