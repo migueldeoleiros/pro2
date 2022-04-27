@@ -340,7 +340,7 @@ int withdraw(char *productId, char *userId, tList *list){
         itemStack = peek(item.bidStack);
 
         //si no coincide el usuario se sale con error
-        //if(itemStack.bidder != userId) return 1;
+        if(strcmp(itemStack.bidder,userId) != 0) return 1;
 
         printf("* Withdraw: product %s bidder %s category %s price %.2f bids %d\n",
                item.productId, itemStack.bidder, categoryToString(item.productCategory),
