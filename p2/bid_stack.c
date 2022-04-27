@@ -10,13 +10,15 @@
 #include "bid_stack.h"
 
 //crea una pila vacia
-void createEmptyStack(tStack *stack) { stack->top = SNULL; }
+void createEmptyStack(tStack *stack){
+    stack->top = SNULL;
+}
 
 //Si la pila no está llena introduce un elemento en la cima de esta
-bool push(tItemS item, tStack *stack) {
-    if (stack->top == SMAX - 1) { //si pila llena
+bool push(tItemS item, tStack *stack){
+    if(stack->top == SMAX - 1){ //si pila llena
         return false;
-    } else { 
+    }else{ 
         stack->top++;
         stack->data[stack->top] = item;
     }
@@ -24,16 +26,16 @@ bool push(tItemS item, tStack *stack) {
 }
 
 //Elimina el elemento situado en la cima de la pila
-void pop(tStack *stack) {
+void pop(tStack *stack){
     stack->top--; 
 }
 
 //Selecciona el elemento situado en la cima de la pila sin eliminarlo
-tItemS peek(tStack stack) {
+tItemS peek(tStack stack){
     return stack.data[stack.top];
 }
 
 //Determina si una pila está vacía
-bool isEmptyStack(tStack stack) {
+bool isEmptyStack(tStack stack){
     return (stack.top == SNULL);
 }

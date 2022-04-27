@@ -18,7 +18,7 @@ bool createNode(tPosL *pos) {
     return *pos != LNULL;
 }
 
-tPosL findPosition(tItemL item, tList list){
+tPosL findPosition(tItemL item, tList list) {
 /* Devuelve la posición en la que se debe encuentra un item para una lista
  * Entrada: item a busacr la posición
  *          list lista donde se encuentra el item
