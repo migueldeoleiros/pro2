@@ -43,13 +43,17 @@ int new(char *productId, char *userId, char *productCategory,
  *         list lista a la que añadir el producto
  *Salida: Si no hay error se añade el elemento a la lista y retorna 0
  *        si no, se retorna 1.
+ *Precondición: La lista está inicializada.
+ *Poscondición: El contador de pujas de producto se inicializa a 0
+ *              y se asocia una nueva pila de pujas vacía.
  */
 
 int stats(tList list);
 /*Imprime un Listado de los productos actuales y sus datos
  *Entrada: list lista con los datos
  *Salida: Se imprime un listado con los productos y datos y retorna 0
- *        si hay error (la lista no existe) se retorna 1.
+ *        si hay error (la lista no existe/está vacía) se retorna 1.
+ *Precondición: La lista está inicializada.
  */
 
 int bid(char *productId, char *userId, char *productPrice, tList *list);
@@ -60,6 +64,9 @@ int bid(char *productId, char *userId, char *productPrice, tList *list);
  *         list lista que contiene el producto
  *Salida: Se modifica el producto y se retorna 0
  *        si hay error (la puja no es valida) se retorna 1.
+ *Precondición: La lista está inicializada.
+ *Poscondición: Si la puja es válida se modifica el precio
+ *              y actualiza el contador de pujas.
  */
 
 int delete(char *productId, tList *list);
@@ -68,6 +75,7 @@ int delete(char *productId, tList *list);
  *         list lista donde se encuentra el producto a borrar
  *Salida: Se borra el elemento si existe y se retorna 0
  *        si no se retorna 1.
+ *Precondición: La lista está inicializada.
  */
 
 void processCommand(char *commandNumber, char command, char *param1,
@@ -77,13 +85,14 @@ void processCommand(char *commandNumber, char command, char *param1,
  *         command el commando que se quiere ejecutar
  *         param.. los parametros del comando a ejecutar
  *         list la lista en la que se ejecuta el comando
- *Salida: se ejecuta el comando pedido.
+ *Precondición: La lista está inicializada.
+ *Poscondición: Se ejecuta el comando pedido.
  */
 
 void readTasks(char *filename);
 /*Lee cada linea de un archivo y ejecuta los comandos en ellas
  *Entrada: filename el nombre del archivo a leer
- *Salida: se llama a processCommand para cada linea.
+ *Poscondición: Se llama a processCommand para cada linea.
  */
 
 char *categoryToString(tProductCategory category){
@@ -126,7 +135,6 @@ int new(char *productId, char *userId, char *productCategory,
                productId, userId, productCategory, productPrice);
         return 0; 
     }
-    printf("+ Error: New not possible\n");
     return 1;
     
 }
@@ -166,40 +174,40 @@ int stats(tList list) {
                nPaintings > 0 ? paintingsPrice/nPaintings : 0);//evitar division entre 0
         return 0;
     }
-    printf("+ Error: Stats not posible\n");
     return 1;
-    
 }
 
 int bid(char *productId, char *userId, char *productPrice, tList *list) {
-    
     tItemL item;
     tPosL pos;
+    float nprice;
+    nprice = atof(productPrice);
 
-    // uso do while para evitar ejecutar código innecesario cuando falla una condición
-    do{
-        if((pos = findItem(productId, *list)) == LNULL) break;
-        else item = getItem(pos, *list);
+    /*Uso multimples return para evitar que se ejecute código innecesario
+      una vez que se incumpla una condición el sistema retorna el error 
+     */
 
-        if(strcmp(item.seller, userId) == 0) break;
+    //existe el producto
+    if((pos = findItem(productId, *list)) == LNULL) return 1;
+    else item = getItem(pos, *list);
 
-        if(item.productPrice >= atof(productPrice)) break;
-        else item.productPrice = atof(productPrice);
+    //el usuario no es el vendedor
+    if(strcmp(item.seller, userId) == 0) return 1;
 
-        item.bidCounter ++;
+    //el precio de la puja es superior al precio del producto o la puja anterior 
+    if(nprice <= item.productPrice) return 1;
+    else item.productPrice = nprice;
 
-        updateItem(item, pos, list);
-        printf("* Bid: product %s seller %s category %s price %.2f bids %d\n",
-               item.productId, item.seller, categoryToString(item.productCategory),
-               item.productPrice, item.bidCounter);
-        return 0;
-    }while(0);
-    printf("+ Error: Bid not possible\n");
-    return 1;
+    item.bidCounter ++;
+
+    updateItem(item, pos, list);
+    printf("* Bid: product %s seller %s category %s price %s bids %d\n",
+            item.productId, item.seller, categoryToString(item.productCategory),
+            productPrice, item.bidCounter);
+    return 0;
 }
 
 int delete(char *productId, tList *list) {
-
     tItemL item;
     tPosL pos;
     
@@ -212,7 +220,6 @@ int delete(char *productId, tList *list) {
                item.productPrice, item.bidCounter);
         return 0;
     } 
-    printf("+ Error: Delete not possible\n");
     return 1;
 }
 
@@ -225,23 +232,27 @@ void processCommand(char *commandNumber, char command, char *param1,
         case 'N': {
             printf("%s %c: product %s seller %s category %s price %s\n",
                    commandNumber, command, param1, param2, param3, param4);
-            new(param1, param2, param3, param4, list);
+            if(new(param1, param2, param3, param4, list))
+                printf("+ Error: New not possible\n");
             break;
         }
         case 'S': {
             printf("%s %c \n", commandNumber, command);
-            stats(*list);
+            if(stats(*list))
+                printf("+ Error: Stats not possible\n");
             break;
         }
         case 'B': {
             printf("%s %c: product %s bidder %s price %s\n",
                    commandNumber, command, param1, param2, param3);
-            bid(param1, param2, param3, list);
+            if(bid(param1, param2, param3, list))
+                printf("+ Error: Bid not possible\n");
             break;
         }
         case 'D': {
             printf("%s %c: product %s\n", commandNumber, command, param1);
-            delete(param1, list);
+            if(delete(param1, list))
+                printf("+ Error: Delete not possible\n");
             break;
         }
         default: {
