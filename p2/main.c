@@ -52,6 +52,7 @@ int new(char *productId, char *userId, char *productCategory,
  *         list lista a la que añadir el producto
  *Salida: Si no hay error se añade el elemento a la lista y retorna 0
  *        si no, se retorna 1.
+ *Precondición: La lista está inicializada.
  *Poscondición: El contador de pujas de producto se inicializa a 0
  *              y se asocia una nueva pila de pujas vacía.
  */
@@ -61,6 +62,7 @@ int stats(tList list);
  *Entrada: list lista con los datos
  *Salida: Si el listado se ha mostrado se retorna 0
  *        si hay error (la lista no existe/está vacía) se retorna 1.
+ *Precondición: La lista está inicializada.
  */
 
 int bid(char *productId, char *userId, char *productPrice, tList *list);
@@ -72,6 +74,7 @@ int bid(char *productId, char *userId, char *productPrice, tList *list);
  *         list lista que contiene el producto
  *Salida: Se modifica el producto y se retorna 0
  *        si hay error (la puja no es válida) se retorna 1.
+ *Precondición: La lista está inicializada.
  *Poscondición: Si la puja es válida se añade a la pila del producto
  *              y actualiza el contador de pujas.
  */
@@ -82,6 +85,7 @@ int delete(char *productId, tList *list);
  *         list lista donde se encuentra el producto a borrar
  *Salida: Se borra el elemento si existe y se retorna 0
  *        si no se retorna 1.
+ *Precondición: La lista está inicializada.
  *Poscondición: Se elimina la pila de pujas asociada.
  */
 
@@ -91,6 +95,7 @@ int award(char *productId, tList *list);
  *         list lista donde se encuentra el producto
  *Salida: Si se ha mostrado el ganador de la puja se retorna 0
  *        si no (no existe el producto o no hay pujas) se retorna 1.
+ *Precondición: La lista está inicializada.
  */
 
 int withdraw(char *productId, char *userId, tList *list);
@@ -101,6 +106,7 @@ int withdraw(char *productId, char *userId, tList *list);
  *Salida: Se modifica el producto y se retorna 0
  *        si hay error (no exite el producto, no hay pujas o userID
  *        no corresponde) se retorna 1.
+ *Precondición: La lista está inicializada.
  *Poscondición: Si no hay error se decrementa el contador de pujas.
  */
 
@@ -109,6 +115,7 @@ int removeEmpty(tList *list);
  *Entrada: list lista con los datos
  *Salida: Si se elimina algun producto retorna 0
  *        si hay error (no existen productos sin pujas) se retorna 1.
+ *Precondición: La lista está inicializada.
  */
 
 void processCommand(char *commandNumber, char command, char *param1,
@@ -118,6 +125,7 @@ void processCommand(char *commandNumber, char command, char *param1,
  *         command el commando que se quiere ejecutar
  *         param.. los parametros del comando a ejecutar
  *         list la lista en la que se ejecuta el comando
+ *Precondición: La lista está inicializada.
  *Poscondición: Se ejecuta el comando pedido.
  */
 
@@ -252,21 +260,28 @@ int bid(char *productId, char *userId, char *price, tList *list) {
     tItemL item;
     tItemS itemStack;
     tPosL pos;
+    float nprice;
+    nprice = atof(price);
 
     /*Uso multimples return para evitar que se ejecute código innecesario
       una vez que se incumpla una condición el sistema retorna el error 
      */
+
+    //existe el producto
     if((pos = findItem(productId, *list)) == LNULL) return 1;
     else item = getItem(pos, *list);
 
+    //el usuario no es el vendedor
     if(strcmp(item.seller, userId) == 0) return 1;
 
-    if(item.productPrice >= atof(price)) return 1;
-    else itemStack.productPrice = atof(price);
+    //el precio de la puja es superior al precio del producto o la puja anterior 
+    if((nprice <= item.productPrice) || 
+       (nprice <= peek(item.bidStack).productPrice)) return 1;
+    else itemStack.productPrice = nprice;
 
     if(strcpy(itemStack.bidder, userId) == 0) return 1;
 
-    push(itemStack, &item.bidStack);
+    if(!push(itemStack, &item.bidStack)) return 1;
     item.bidCounter ++;
 
     updateItem(item, pos, list);

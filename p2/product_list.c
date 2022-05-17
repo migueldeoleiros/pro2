@@ -136,7 +136,7 @@ tPosL findItem(tProductId productId, tList list) {
 
     if(isEmptyList(list)) return LNULL; //Si la lista está vacía
     else {
-        for(pos = list; strcmp(pos->data.productId, productId) != 0 && pos->next != LNULL;
+        for(pos = list; strcmp(pos->data.productId, productId) < 0 && pos->next != LNULL;
             pos = pos->next);
         if(strcmp(pos->data.productId, productId) != 0) pos = LNULL;
         return pos;
